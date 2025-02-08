@@ -1,4 +1,4 @@
-# 🎾 Tennis Match Management API
+# 🎾 Spring_Tennis API
 
 ![Java](https://img.shields.io/badge/Java-17-blue?style=flat&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-brightgreen?style=flat&logo=spring)
@@ -38,8 +38,8 @@ Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statis
 ### 📥 **Cloner le projet**
 
 ```bash
-git clone https://github.com/Escanor1986/Tennis-Match-Management.git
-cd Tennis-Match-Management
+git clone https://github.com/Escanor1986/Spring_Tennis.git
+cd tennis
 ```
 
 ### ⚙️ **Configurer la base de données**
