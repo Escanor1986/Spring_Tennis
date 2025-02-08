@@ -1,10 +1,10 @@
 # 🎾 Tennis Match Management API
 
-![Java](https://img.shields.io/badge/Java-21-blue?style=flat&logo=java)
+![Java](https://img.shields.io/badge/Java-17-blue?style=flat&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-brightgreen?style=flat&logo=spring)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=flat&logo=postgresql)
 ![Maven](https://img.shields.io/badge/Maven-3.9.9-orange?style=flat&logo=apachemaven)
-![Last Commit](https://img.shields.io/github/last-commit/Escanor1986/Tennis-Match-Management)
+![Last Commit](https://img.shields.io/github/last-commit/Escanor1986/Spring_Tennis)
 
 ## 📝 Description
 
