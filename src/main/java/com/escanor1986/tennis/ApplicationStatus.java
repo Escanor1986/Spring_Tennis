@@ -1,4 +1,5 @@
-package com.escanor1986.tennis.rest;
+package com.escanor1986.tennis;
+
 
 /* 
  * This is a record class that represents the health check response.

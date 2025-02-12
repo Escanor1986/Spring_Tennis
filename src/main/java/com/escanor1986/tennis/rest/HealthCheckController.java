@@ -3,18 +3,30 @@ package com.escanor1986.tennis.rest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/* 
- * This is a controller class that handles the health check request.
- * The @RestController annotation tells Spring that this class is a controller that handles web requests.
- * The controller class has a single method that handles the health check request.
- * The method returns a HealthCheck object that contains the health check status and message.
- * The method is annotated with @GetMapping to map the /healthcheck endpoint to the method.
+import com.escanor1986.tennis.HealthCheck;
+import com.escanor1986.tennis.service.HealthCheckService;
+
+/** 
+ *? Cette classe est un contrôleur REST qui expose un point de terminaison pour vérifier l'état de l'application.
+ *? Le point de terminaison /healthcheck renvoie un objet HealthCheck qui contient le statut de l'application et un message.
+ *? Le contrôleur utilise le service HealthCheckService pour obtenir le statut de l'application.
+ *? Le service HealthCheckService renvoie un objet HealthCheck avec le statut OK et un message de bienvenue.
+ *? Le contrôleur REST renvoie l'objet HealthCheck en réponse à la requête GET sur le point de terminaison /healthcheck.
  */
 @RestController
 public class HealthCheckController {
 
+    private final HealthCheckService healthCheckService;
+
+    // ✅ Injection via le constructeur (recommandé) plutôt que par @Autowired
+    // Plus facile à tester et plus sûr
+    public HealthCheckController(HealthCheckService healthCheckService) {
+        this.healthCheckService = healthCheckService;
+    }
+
     @GetMapping("/healthcheck")
+    // Utilisation du service HealthCheckService pour obtenir le statut de l'application
     public HealthCheck healthcheck() {
-        return new HealthCheck(ApplicationStatus.OK, "Welcome to Dyma Tennis!");
+        return healthCheckService.healthcheck();
     }
 }

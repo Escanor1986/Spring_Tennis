@@ -1,4 +1,5 @@
-package com.escanor1986.tennis.rest;
+package com.escanor1986.tennis;
+
 
 /* 
  * This is a record class that represents the health check response.
@@ -14,5 +15,6 @@ package com.escanor1986.tennis.rest;
  * The health check response is used to verify that the application is running correctly.
  * The health check response is returned when the /healthcheck endpoint is called.
  */
+
 public record HealthCheck(ApplicationStatus status, String message) {
 }
