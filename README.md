@@ -11,6 +11,8 @@
 Tennis Match Management API est une application REST développée avec **Spring Boot**, **Spring Web**, **Spring Data JPA**, et **PostgreSQL**.  
 Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statistiques via une API REST.
 
+🔹 **Nouvelle fonctionnalité** : Connexion à PostgreSQL via **Docker** avec gestion de la persistance des données.  
+
 ---
 
 ## 🚀 **Technologies utilisées**
@@ -20,6 +22,7 @@ Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statis
   - Spring Web (REST API)
   - Spring Data JPA (Gestion des entités)
 - **PostgreSQL** (Base de données relationnelle)
+- **Docker & Docker Compose** (Gestion de l'environnement PostgreSQL)
 - **Maven** (Gestionnaire de dépendances)
 - **HikariCP** (Pool de connexion performant)
 - **Lombok** (Réduction du boilerplate)
@@ -33,41 +36,37 @@ Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statis
 
 - **Java 21** installé (`java -version` pour vérifier)
 - **Maven 3.9+** installé (`mvn -v` pour vérifier)
-- **PostgreSQL** installé et en cours d'exécution
-
-### 📥 **Cloner le projet**
-
-```bash
-git clone https://github.com/Escanor1986/Spring_Tennis.git
-cd tennis
-```
-
-### ⚙️ **Configurer la base de données**
-
-Modifie `src/main/resources/application.properties` :
-
-```properties
-# PostgreSQL Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/tennis_db
-spring.datasource.username=postgres
-spring.datasource.password=your_password
-
-# Hibernate Configuration
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-```
+- **Docker & Docker Compose** installés (`docker -v` pour vérifier)
 
 ---
 
-## ▶️ **Démarrer l'application**
+## 🛠 **Démarrer PostgreSQL avec Docker**
 
-Lance l'application avec Maven :
+Le projet utilise **Docker Compose** pour lancer **PostgreSQL** rapidement.
+
+### ▶️ **Lancer la base de données**
 
 ```bash
-./mvnw spring-boot:run
+docker compose -f src/main/docker/postgresql.yml up -d
 ```
 
-L'application démarre sur **http://localhost:8080/** 🎾
+➡ PostgreSQL sera disponible sur **localhost:5432** avec persistance des données.
+
+### ⏹ **Arrêter PostgreSQL**
+
+```bash
+docker compose -f src/main/docker/postgresql.yml down
+```
+
+➡ Stoppe le conteneur **sans supprimer les données**.
+
+### 🔄 **Redémarrer PostgreSQL plus tard**
+
+```bash
+docker compose -f src/main/docker/postgresql.yml up -d
+```
+
+➡ Relance PostgreSQL avec toutes les données précédentes.
 
 ---
 
@@ -75,39 +74,76 @@ L'application démarre sur **http://localhost:8080/** 🎾
 
 | Méthode | Endpoint               | Description |
 |---------|------------------------|-------------|
-| GET     | `/api/healthcheck`      | Vérifie si l'API est active |
-| GET     | `/api/matches`          | Récupère tous les matchs |
-| GET     | `/api/matches/{id}`     | Récupère un match spécifique |
-| POST    | `/api/matches`          | Ajoute un nouveau match |
-| PUT     | `/api/matches/{id}`     | Met à jour un match existant |
-| DELETE  | `/api/matches/{id}`     | Supprime un match |
-
-💡 **Exemple de requête GET :**
-
-```bash
-curl -X GET http://localhost:8080/api/matches
-```
+| GET     | `/healthcheck`         | Vérifie si l'API est active |
+| GET     | `/testdata`            | Récupère toutes les entrées TestData (PostgreSQL) |
+| GET     | `/matches`             | Récupère tous les matchs (à venir) |
+| GET     | `/matches/{id}`        | Récupère un match spécifique (à venir) |
+| POST    | `/matches`             | Ajoute un nouveau match (à venir) |
+| PUT     | `/matches/{id}`        | Met à jour un match existant (à venir) |
+| DELETE  | `/matches/{id}`        | Supprime un match (à venir) |
 
 ---
 
-## 📜 **Exemple d'entité Match**
+## 📥 **Cloner le projet & Démarrer l'application**
+
+```bash
+git clone https://github.com/Escanor1986/Spring_Tennis.git
+cd tennis
+./mvnw spring-boot:run
+```
+
+L'application démarre sur **<http://localhost:8080/>** 🎾
+
+---
+
+## 📜 **Exemple d'entité TestData (PostgreSQL)**
 
 ```java
 @Entity
-@Table(name = "matches")
-public class Match {
+@Table(name = "test_data")
+public class TestData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
 
-    private String joueur1;
-    private String joueur2;
-    private String score;
-    private LocalDate date;
-
-    // Getters et setters
+    // Getters & Setters
 }
 ```
+
+💡 Cette entité est accessible via `/testdata` et les données insérées depuis **VS Code** sont visibles via **l'API REST**.
+
+---
+
+## ✅ **Tester la connexion PostgreSQL avec VS Code**
+
+**1️⃣ Ouvrir l'extension PostgreSQL dans VS Code**  
+
+**2️⃣ Ajouter une connexion avec ces paramètres :**
+
+- **Host** : `localhost`
+- **Port** : `5432`
+- **User** : `postgres`
+- **Password** : `postgres`
+- **Database** : `postgres`
+  
+**3️⃣ Créer une table dans PostgreSQL depuis VS Code**
+
+```sql
+CREATE TABLE test_data (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+INSERT INTO test_data (name) VALUES ('Ajout via VS Code');
+```
+
+**4️⃣ Vérifier que les données sont accessibles dans Spring Boot :**
+
+```bash
+curl http://localhost:8080/testdata
+```
+
+💡 Les données insérées dans **VS Code** sont bien récupérées en **JSON** dans l'API ! 🎉
 
 ---
 
@@ -128,11 +164,11 @@ mvn test
 
 ## 📦 **Déploiement**
 
-### **Dockerisation**
+### **Dockerisation de l’application**
 
-Tu peux exécuter l'application dans un conteneur **Docker** avec PostgreSQL :
+Tu peux exécuter l'application dans un conteneur **Docker** avec PostgreSQL.
 
-#### 1️⃣ **Créer un fichier `Dockerfile`**
+#### **1️⃣ Créer un fichier `Dockerfile`**
 
 ```dockerfile
 FROM openjdk:21
@@ -141,7 +177,7 @@ COPY target/tennis-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-#### 2️⃣ **Créer un fichier `docker-compose.yml`**
+#### **2️⃣ Modifier `docker-compose.yml` pour inclure l'application**
 
 ```yaml
 version: '3.8'
@@ -163,19 +199,19 @@ services:
       - "8080:8080"
 ```
 
-#### 3️⃣ **Lancer Docker**
+#### **3️⃣ Lancer Docker**
 
 ```bash
 docker-compose up --build
 ```
 
-L'API sera accessible sur **http://localhost:8080/** 🚀
+L'API sera accessible sur **<http://localhost:8080/>** 🚀
 
 ---
 
 ## 🤝 **Contribuer**
 
-Les contributions sont les bienvenues ! 
+Les contributions sont les bienvenues !
 
 1. Forke le projet 🍴  
 2. Crée une branche (`git checkout -b feature/amélioration`)  
