@@ -1,4 +1,4 @@
-package com.escanor1986.tennis.rest;
+package com.escanor1986.tennis.web;
 
 import com.escanor1986.tennis.models.TestData;
 import com.escanor1986.tennis.service.TestDataService;

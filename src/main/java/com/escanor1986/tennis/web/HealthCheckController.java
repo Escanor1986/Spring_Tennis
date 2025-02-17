@@ -1,4 +1,4 @@
-package com.escanor1986.tennis.rest;
+package com.escanor1986.tennis.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
