@@ -45,6 +45,7 @@ public class PlayerController {
       @ApiResponse(responseCode = "200", description = "Players list", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
   })
+  
   @GetMapping("/player/{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
       return PlayerList.ALL.stream()

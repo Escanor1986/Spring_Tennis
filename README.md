@@ -117,11 +117,6 @@ docker compose -f src/main/docker/postgresql.yml up -d
 
 ---
 
-🎯 **Ton README est maintenant à jour avec les nouveaux endpoints Player !** 🚀🔥  
-Dis-moi si tu veux encore **ajouter quelque chose ou structurer différemment** ! 😉
-
----
-
 ## 📥 **Cloner le projet & Démarrer l'application**
 
 ```bash
