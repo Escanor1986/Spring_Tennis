@@ -72,15 +72,53 @@ docker compose -f src/main/docker/postgresql.yml up -d
 
 ## 📡 **Endpoints REST disponibles**
 
+### **🔹 Health Check**
+
 | Méthode | Endpoint               | Description |
 |---------|------------------------|-------------|
 | GET     | `/healthcheck`         | Vérifie si l'API est active |
+
+---
+
+### **🔹 Gestion des joueurs (`Player`)**
+
+| Méthode | Endpoint               | Description |
+|---------|------------------------|-------------|
+| GET     | `/player`              | Récupère la liste des joueurs |
+| GET     | `/player/{lastName}`    | Récupère un joueur par son nom |
+| POST    | `/player`              | Ajoute un nouveau joueur |
+| PUT     | `/player`              | Met à jour un joueur existant |
+| DELETE  | `/player/{lastName}`    | Supprime un joueur par son nom |
+
+---
+
+### **🔹 Gestion des matchs (`Match`)** *(à venir)*
+
+| Méthode | Endpoint               | Description |
+|---------|------------------------|-------------|
+| GET     | `/matches`             | Récupère tous les matchs |
+| GET     | `/matches/{id}`        | Récupère un match spécifique |
+| POST    | `/matches`             | Ajoute un nouveau match |
+| PUT     | `/matches/{id}`        | Met à jour un match existant |
+| DELETE  | `/matches/{id}`        | Supprime un match |
+
+---
+
+### **🔹 Données de test (`TestData`)**
+
+| Méthode | Endpoint               | Description |
+|---------|------------------------|-------------|
 | GET     | `/testdata`            | Récupère toutes les entrées TestData (PostgreSQL) |
-| GET     | `/matches`             | Récupère tous les matchs (à venir) |
-| GET     | `/matches/{id}`        | Récupère un match spécifique (à venir) |
-| POST    | `/matches`             | Ajoute un nouveau match (à venir) |
-| PUT     | `/matches/{id}`        | Met à jour un match existant (à venir) |
-| DELETE  | `/matches/{id}`        | Supprime un match (à venir) |
+
+---
+
+💡 **Tous les endpoints sont documentés dans Swagger UI** :  
+👉 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)  
+
+---
+
+🎯 **Ton README est maintenant à jour avec les nouveaux endpoints Player !** 🚀🔥  
+Dis-moi si tu veux encore **ajouter quelque chose ou structurer différemment** ! 😉
 
 ---
 

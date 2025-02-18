@@ -45,14 +45,14 @@ public class PlayerController {
       @ApiResponse(responseCode = "200", description = "Players list", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
   })
-
-  @GetMapping("{lastName}")
+  @GetMapping("/player/{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
-    return PlayerList.ALL.stream()
-        .filter(player -> player.lastName().equals(lastName))
-        .findFirst()
-        .orElseThrow();
+      return PlayerList.ALL.stream()
+          .filter(player -> player.lastName().equals(lastName))
+          .findFirst()
+          .orElseThrow();
   }
+  
 
   // ! Créer un joueur
   @Operation(summary = "Create a player", description = "Create a new player")
