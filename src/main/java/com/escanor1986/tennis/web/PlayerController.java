@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +62,7 @@ public class PlayerController {
   })
 
   @PostMapping("/player")
-  public Player createPlayer(Player player) {
+  public Player createPlayer(@RequestBody @Valid Player player) {
     return player;
   }
 
@@ -72,7 +74,7 @@ public class PlayerController {
   })
 
   @PutMapping("/player")
-  public Player updatePlayer(Player player) {
+  public Player updatePlayer(@RequestBody @Valid Player player) {
     return player;
   }
 
