@@ -92,83 +92,83 @@ cd tennis
 ./mvnw spring-boot:run
 ```
 
-L'application démarre sur **<http://localhost:8080/>** 🎾
+➡ L'application démarre sur **<http://localhost:8080/>** 🎾
 
 ---
 
-## 📜 **Exemple d'entité TestData (PostgreSQL)**
+## 🏗 **Packager et Lancer l'application via un JAR**
 
-```java
-@Entity
-@Table(name = "test_data")
-public class TestData {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-
-    // Getters & Setters
-}
-```
-
-💡 Cette entité est accessible via `/testdata` et les données insérées depuis **VS Code** sont visibles via **l'API REST**.
-
----
-
-## ✅ **Tester la connexion PostgreSQL avec VS Code**
-
-**1️⃣ Ouvrir l'extension PostgreSQL dans VS Code**  
-
-**2️⃣ Ajouter une connexion avec ces paramètres :**
-
-- **Host** : `localhost`
-- **Port** : `5432`
-- **User** : `postgres`
-- **Password** : `postgres`
-- **Database** : `postgres`
-  
-**3️⃣ Créer une table dans PostgreSQL depuis VS Code**
-
-```sql
-CREATE TABLE test_data (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-INSERT INTO test_data (name) VALUES ('Ajout via VS Code');
-```
-
-**4️⃣ Vérifier que les données sont accessibles dans Spring Boot :**
+### **1️⃣ Générer un JAR exécutable**
 
 ```bash
-curl http://localhost:8080/testdata
+./mvnw package
 ```
 
-💡 Les données insérées dans **VS Code** sont bien récupérées en **JSON** dans l'API ! 🎉
+➡ Le fichier JAR est généré dans `target/`.
+
+### **2️⃣ Lancer l'application avec Java**
+
+```bash
+java -jar target/tennis-0.0.1-SNAPSHOT.jar
+```
+
+➡ L'application démarre en mode standalone.
+
+### **3️⃣ Lancer avec un profil spécifique (`dev`, `prod`, etc.)**
+
+```bash
+java -jar target/tennis-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+```
+
+➡ Charge la configuration `application-dev.properties`.
+
+### **4️⃣ Lancer l'application en arrière-plan (Linux/macOS)**
+
+```bash
+java -jar target/tennis-0.0.1-SNAPSHOT.jar &
+```
+
+➡ Exécute l'application sans bloquer le terminal.
+
+### **5️⃣ Arrêter l'application**
+
+```bash
+ps aux | grep tennis
+kill -9 <PID>
+```
 
 ---
 
 ## 🛠 **Tests & Débogage**
+
+### ✅ **Lancer les tests**
+
+```bash
+./mvnw test
+```
+
+📌 Exécute **tous les tests unitaires et d’intégration**.
+
+### 🎯 **Lancer un test spécifique**
+
+```bash
+./mvnw -Dtest=HealthCheckServiceTest test
+```
+
+➡ Exécute uniquement les tests de `HealthCheckServiceTest.java`.
 
 ### 🔍 **Accéder à la documentation API**
 
 Après le démarrage, accède à **Swagger UI** :
 👉 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
 
-### ✅ **Lancer les tests**
-
-```bash
-mvn test
-```
-
 ---
 
-## 📦 **Déploiement**
-
-### **Dockerisation de l’application**
+## 📦 **Déploiement avec Docker**
 
 Tu peux exécuter l'application dans un conteneur **Docker** avec PostgreSQL.
 
-#### **1️⃣ Créer un fichier `Dockerfile`**
+### **1️⃣ Créer un fichier `Dockerfile`**
 
 ```dockerfile
 FROM openjdk:21
@@ -177,7 +177,7 @@ COPY target/tennis-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-#### **2️⃣ Modifier `docker-compose.yml` pour inclure l'application**
+### **2️⃣ Modifier `docker-compose.yml` pour inclure l'application**
 
 ```yaml
 version: '3.8'
@@ -199,13 +199,13 @@ services:
       - "8080:8080"
 ```
 
-#### **3️⃣ Lancer Docker**
+### **3️⃣ Lancer l’application avec Docker**
 
 ```bash
 docker-compose up --build
 ```
 
-L'API sera accessible sur **<http://localhost:8080/>** 🚀
+➡ L'API sera accessible sur **<http://localhost:8080/>** 🚀
 
 ---
 
@@ -230,4 +230,6 @@ Voir le fichier [LICENSE](LICENSE) pour plus d’informations.
 
 ## 🎯 **Remerciements**
 
-Merci à tous ceux qui contribuent au projet ! 🙌
+Merci à tous ceux qui contribuent au projet ! 🙌  
+
+---

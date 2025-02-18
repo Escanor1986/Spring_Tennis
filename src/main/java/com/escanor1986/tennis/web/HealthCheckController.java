@@ -31,7 +31,7 @@ public class HealthCheckController {
     private final HealthCheckService healthCheckService;
 
     // ✅ Injection via le constructeur (recommandé) plutôt que par @Autowired
-    // Plus facile à tester et plus sûr
+    // Plus facile à tester et plus sûr car les dépendances sont explicites
     public HealthCheckController(HealthCheckService healthCheckService) {
         this.healthCheckService = healthCheckService;
     }
