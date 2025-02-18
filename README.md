@@ -152,7 +152,7 @@ curl http://localhost:8080/testdata
 ### 🔍 **Accéder à la documentation API**
 
 Après le démarrage, accède à **Swagger UI** :
-👉 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+👉 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
 
 ### ✅ **Lancer les tests**
 
