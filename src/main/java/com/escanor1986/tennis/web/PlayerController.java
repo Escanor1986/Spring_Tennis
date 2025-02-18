@@ -1,11 +1,11 @@
 package com.escanor1986.tennis.web;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import com.escanor1986.tennis.Player;
+import com.escanor1986.tennis.PlayerList;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Tag(name = "Player", description = "The player API")
 @RestController
 public class PlayerController {
-  
-  //! Listing des joueurs
+
+  // ! Listing des joueurs
   @Operation(summary = "Finds players", description = "Retrieves a list of players")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Players list", content = {
@@ -34,24 +34,25 @@ public class PlayerController {
 
   @GetMapping("/player")
   public List<Player> list() {
-    return Collections.emptyList();
+    return PlayerList.ALL;
   }
-  
-  //! Recherche d'un joueur par son nom
+
+  // ! Recherche d'un joueur par son nom
   @Operation(summary = "Find one player", description = "Retrieve a player by its last name")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Players list", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
   })
 
-  @GetMapping("/player/{lastName}")
-  // Le contenu de de @GetMapping doit correspondre à celui de @PathVariable
-  // ("lastName") en l'occurrence
+  @GetMapping("{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
-    return null;
+    return PlayerList.ALL.stream()
+        .filter(player -> player.lastName().equals(lastName))
+        .findFirst()
+        .orElse(null);
   }
 
-  //! Créer un joueur
+  // ! Créer un joueur
   @Operation(summary = "Create a player", description = "Create a new player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Player created", content = {
@@ -63,7 +64,7 @@ public class PlayerController {
     return player;
   }
 
-  //! Mettre à jour un joueur
+  // ! Mettre à jour un joueur
   @Operation(summary = "Update a player", description = "Update an existing player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Player updated", content = {
@@ -75,11 +76,11 @@ public class PlayerController {
     return player;
   }
 
-  //! Supprimer un joueur
+  // ! Supprimer un joueur
   @Operation(summary = "Delete a player", description = "Delete an existing player")
   @ApiResponses(value = {
-    // Le code de réponse 204 signifie que la requête a été traitée avec succès
-    // mais qu'il n'y a pas de contenu à renvoyer (corps de requête vide)
+      // Le code de réponse 204 signifie que la requête a été traitée avec succès
+      // mais qu'il n'y a pas de contenu à renvoyer (corps de requête vide)
       @ApiResponse(responseCode = "204", description = "Player deleted", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
   })
