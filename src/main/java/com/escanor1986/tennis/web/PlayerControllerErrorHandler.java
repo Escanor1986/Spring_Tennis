@@ -2,7 +2,6 @@ package com.escanor1986.tennis.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -11,12 +10,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.escanor1986.tennis.service.PlayerNotFoundException;
+
 @RestControllerAdvice
 public class PlayerControllerErrorHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler(PlayerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleNoElementException() {
+    public Error handlePlayerNotFoundException(PlayerNotFoundException ex) {
+        return new Error(ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

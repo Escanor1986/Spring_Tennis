@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.escanor1986.tennis.Player;
 import com.escanor1986.tennis.PlayerList;
+import com.escanor1986.tennis.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,6 +28,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 public class PlayerController {
 
+  // ✅ Injection du service via le constructeur (recommandé) plutôt que par @Autowired
+  private final PlayerService playerService;
+  
+  PlayerController(PlayerService playerService) {
+    this.playerService = playerService;
+  }
+  
   // ! Listing des joueurs
   @Operation(summary = "Finds players", description = "Retrieves a list of players")
   @ApiResponses(value = {
@@ -36,22 +44,22 @@ public class PlayerController {
 
   @GetMapping("/player")
   public List<Player> list() {
-    return PlayerList.ALL;
+    return playerService.getAllPlayers();
   }
 
   // ! Recherche d'un joueur par son nom
-  @Operation(summary = "Find one player", description = "Retrieve a player by its last name")
+  @Operation(summary = "Finds a player", description = "Finds a player")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Players list", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
+          @ApiResponse(responseCode = "200", description = "Player",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = Player.class))}),
+          @ApiResponse(responseCode = "404", description = "A player with the specified last name was not found",
+                  content = {@Content(mediaType = "application/json",
+                          schema = @Schema(implementation = Error.class))})
   })
-  
-  @GetMapping("/player/{lastName}")
+  @GetMapping("{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
-      return PlayerList.ALL.stream()
-          .filter(player -> player.lastName().equals(lastName))
-          .findFirst()
-          .orElseThrow();
+      return playerService.getPlayerByLastName(lastName);
   }
   
 
