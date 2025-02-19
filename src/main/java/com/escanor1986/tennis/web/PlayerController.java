@@ -91,16 +91,15 @@ public class PlayerController {
   }
 
   // ! Supprimer un joueur
-  @Operation(summary = "Delete a player", description = "Delete an existing player")
+  @Operation(summary = "Deletes a player", description = "Deletes a player")
   @ApiResponses(value = {
-      // Le code de réponse 204 signifie que la requête a été traitée avec succès
-      // mais qu'il n'y a pas de contenu à renvoyer (corps de requête vide)
-      @ApiResponse(responseCode = "204", description = "Player deleted", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
-  })
+      @ApiResponse(responseCode = "200", description = "Player has been deleted"),
+      @ApiResponse(responseCode = "404", description = "Player with specified last name was not found.", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) })
 
-  @DeleteMapping("/player/{lastName}")
-  public void deletePlayer(@PathVariable("lastName") String lastName) {
-    // Cette méthode est vide car elle ne retourne rien
+  })
+  @DeleteMapping("{lastName}")
+  public void deletePlayerByLastName(@PathVariable("lastName") String lastName) {
+    playerService.delete(lastName);
   }
 }

@@ -2,10 +2,10 @@ package com.escanor1986.tennis.service;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import com.escanor1986.tennis.Rank;
 import com.escanor1986.tennis.Player;
+import com.escanor1986.tennis.PlayerList;
 import com.escanor1986.tennis.PlayerToSave;
 
 /**
@@ -30,19 +30,27 @@ public class RankingCalculator {
     this.playerToSave = playerToSave;
   }
 
+  public RankingCalculator(List<Player> currentPlayersRanking) {
+    this.currentPlayersRanking = currentPlayersRanking;
+    this.playerToSave = null;
+  }
+
   // Cette méthode calcule le nouveau classement des joueurs après l'inscription
   // d'un nouveau joueur.
   public List<Player> getNewPlayersRanking() {
 
     // Ajouter le nouveau joueur à la liste actuelle
     List<Player> newRankingList = new ArrayList<>(currentPlayersRanking);
-    newRankingList.add(new Player(
-        playerToSave.firstName(),
-        playerToSave.lastName(),
-        playerToSave.birthDate(),
-        new Rank(999999999, playerToSave.points())));
+    
+    if (playerToSave != null) {
+      newRankingList.add(new Player(
+          playerToSave.firstName(),
+          playerToSave.lastName(),
+          playerToSave.birthDate(),
+          new Rank(999999999, playerToSave.points())));
+    }
 
-    // Trier la liste par points    
+    // Trier la liste par points
     newRankingList.sort((player1, player2) -> Integer.compare(player2.rank().points(), player1.rank().points()));
 
     // Mise à jour du classement des joueurs
@@ -58,6 +66,8 @@ public class RankingCalculator {
           new Rank(i + 1, player.rank().points()));
       updatedPlayers.add(updatedPlayer);
     }
+
+    PlayerList.ALL = updatedPlayers;
 
     return updatedPlayers;
   }
