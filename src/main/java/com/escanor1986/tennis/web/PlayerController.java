@@ -12,12 +12,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,13 +28,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 public class PlayerController {
 
-  // ✅ Injection du service via le constructeur (recommandé) plutôt que par @Autowired
+  // ✅ Injection du service via le constructeur (recommandé) plutôt que par
+  // @Autowired
   private final PlayerService playerService;
-  
+
   PlayerController(PlayerService playerService) {
     this.playerService = playerService;
   }
-  
+
   // ! Listing des joueurs
   @Operation(summary = "Finds players", description = "Retrieves a list of players")
   @ApiResponses(value = {
@@ -51,19 +52,16 @@ public class PlayerController {
   // ! Recherche d'un joueur par son nom
   @Operation(summary = "Finds a player", description = "Finds a player")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Player",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = Player.class))}),
-          @ApiResponse(responseCode = "404", description = "A player with the specified last name was not found",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = Error.class))})
+      @ApiResponse(responseCode = "200", description = "Player", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) }),
+      @ApiResponse(responseCode = "404", description = "A player with the specified last name was not found", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) })
   })
   @GetMapping("{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
     // Utilisation du service PlayerService pour obtenir un joueur par son nom
-      return playerService.getPlayerByLastName(lastName);
+    return playerService.getPlayerByLastName(lastName);
   }
-  
 
   // ! Créer un joueur
   @Operation(summary = "Create a player", description = "Create a new player")
@@ -73,8 +71,8 @@ public class PlayerController {
   })
 
   @PostMapping("/player")
-  public Player createPlayer(@RequestBody @Valid Player player) {
-    return player;
+  public Player createPlayer(@RequestBody @Valid PlayerToRegister playerToRegister) {
+    return playerService.createPlayer(playerToRegister);
   }
 
   // ! Mettre à jour un joueur
@@ -85,8 +83,8 @@ public class PlayerController {
   })
 
   @PutMapping("/player")
-  public Player updatePlayer(@RequestBody @Valid PlayerToRegister playerToRegister) {
-    return playerService.createPlayer(playerToRegister);
+  public Player updatePlayer(@RequestBody @Valid Player player) {
+    return player;
   }
 
   // ! Supprimer un joueur

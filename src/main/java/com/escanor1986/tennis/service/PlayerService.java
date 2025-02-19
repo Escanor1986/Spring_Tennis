@@ -38,5 +38,5 @@ public class PlayerService {
         .findFirst()
         .orElseThrow(() -> new PlayerNotFoundException(playerToRegister.lastName()));
   }
-  
+
 }
