@@ -48,12 +48,15 @@ public class PlayerService {
 
   // Cette méthode supprime un joueur par son nom de famille.
   public void delete(String lastName) {
+    // En l'absence de joueur avec le nom de famille spécifié, une exception est levée.
     Player playerToDelete = getPlayerByLastName(lastName);
 
+    // Supprimer le joueur de la liste en mémoire en filtrant par nom de famille
     PlayerList.ALL = PlayerList.ALL.stream()
             .filter(player -> !player.lastName().equals(lastName))
             .toList();
 
+    // Recalculer le classement des joueurs        
     RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL);
     rankingCalculator.getNewPlayersRanking();
  }

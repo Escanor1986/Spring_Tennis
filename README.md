@@ -1,4 +1,4 @@
-# 🎾 Spring_Tennis API
+# 🏉 Spring_Tennis API
 
 ![Java](https://img.shields.io/badge/Java-17-blue?style=flat&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-brightgreen?style=flat&logo=spring)
@@ -11,7 +11,7 @@
 Tennis Match Management API est une application REST développée avec **Spring Boot**, **Spring Web**, **Spring Data JPA**, et **PostgreSQL**.  
 Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statistiques via une API REST.
 
-🔹 **Nouvelle fonctionnalité** : Connexion à PostgreSQL via **Docker** avec gestion de la persistance des données.  
+🔹 **Nouvelle fonctionnalité** : Connexion à PostgreSQL via **Docker** avec gestion de la persistance des données.
 
 ---
 
@@ -32,7 +32,7 @@ Elle permet de gérer les matchs de tennis, les joueurs, et d'obtenir des statis
 
 ## 📂 **Installation & Démarrage**
 
-### 🔧 **Prérequis**
+### 🛠️ **Prérequis**
 
 - **Java 21** installé (`java -version` pour vérifier)
 - **Maven 3.9+** installé (`mvn -v` pour vérifier)
@@ -46,11 +46,21 @@ Le projet utilise **Docker Compose** pour lancer **PostgreSQL** rapidement.
 
 ### ▶️ **Lancer la base de données**
 
+Depuis la racine du projet, lancez :
+
 ```bash
 docker compose -f src/main/docker/postgresql.yml up -d
 ```
 
-➡ PostgreSQL sera disponible sur **localhost:5432** avec persistance des données.
+🤍 PostgreSQL sera disponible sur **localhost:5432** avec persistance des données.
+
+> **Note :**  
+> Les scripts d'initialisation situés dans `src/main/docker/init` (comme `init.sql`) s'exécutent **uniquement lors du premier démarrage** du container. Pour forcer leur réexécution (par exemple après correction d'un script), supprimez le dossier de données `postgres-data` :
+> 
+> ```bash
+> rm -rf src/main/docker/postgres-data
+> docker compose -f src/main/docker/postgresql.yml up -d
+> ```
 
 ### ⏹ **Arrêter PostgreSQL**
 
@@ -58,7 +68,7 @@ docker compose -f src/main/docker/postgresql.yml up -d
 docker compose -f src/main/docker/postgresql.yml down
 ```
 
-➡ Stoppe le conteneur **sans supprimer les données**.
+🛠 Stoppe le container **sans supprimer les données**.
 
 ### 🔄 **Redémarrer PostgreSQL plus tard**
 
@@ -66,140 +76,111 @@ docker compose -f src/main/docker/postgresql.yml down
 docker compose -f src/main/docker/postgresql.yml up -d
 ```
 
-➡ Relance PostgreSQL avec toutes les données précédentes.
+🌟 Relance PostgreSQL avec toutes les données précédentes.
 
 ---
 
-## 📡 **Endpoints REST disponibles**
+## 🐞 **Débogage & Vérification de PostgreSQL**
+
+Pour vous assurer que PostgreSQL fonctionne correctement et que le script d'initialisation s'est bien exécuté :
+
+### 1. Vérifier les logs du container
+
+Utilisez la commande suivante pour afficher les logs du container et rechercher d'éventuelles erreurs :
+
+```bash
+docker logs postgresql
+```
+
+Recherchez des messages confirmant l'exécution des scripts d'initialisation ou des erreurs pouvant indiquer un problème (comme une erreur de syntaxe dans `init.sql`).
+
+### 2. Accéder à PostgreSQL via le terminal
+
+Vous pouvez ouvrir une session interactive dans le container avec `psql` :
+
+```bash
+docker exec -it postgresql psql -U postgres
+```
+
+Une fois connecté, vous pouvez lister les tables pour vérifier la création de la table `player` :
+
+```sql
+\dt
+```
+
+Et interroger la table, par exemple :
+
+```sql
+SELECT * FROM player;
+```
+
+### 3. Connexion via l'extension Database de VS Code
+
+Configurez une nouvelle connexion avec les paramètres suivants :
+
+- **Hôte :** `localhost`
+- **Port :** `5432`
+- **Utilisateur :** `postgres`
+- **Mot de passe :** `postgres`
+- **Base de données :** `postgres` (ou toute base de votre choix)
+
+---
+
+## 📰 **Structure des données PostgreSQL**
+
+Lors du démarrage, PostgreSQL exécute **`init.sql`** pour créer la table des joueurs.
+
+#### **Contenu du script `init.sql` :**
+
+```sql
+-- Création de la séquence pour les identifiants des joueurs
+CREATE SEQUENCE IF NOT EXISTS player_id_seq;
+
+-- Création de la table des joueurs
+CREATE TABLE IF NOT EXISTS player (
+  id BIGINT PRIMARY KEY DEFAULT nextval('player_id_seq'),
+  last_name CHARACTER VARYING(50) NOT NULL,
+  first_name CHARACTER VARYING(50) NOT NULL,
+  birth_date DATE NOT NULL,
+  points INTEGER NOT NULL,
+  rank INTEGER NOT NULL
+);
+
+-- Assignation de la séquence à la colonne id
+ALTER SEQUENCE player_id_seq OWNED BY player.id;
+
+-- Attribution du propriétaire de la table à postgres
+ALTER TABLE IF EXISTS public.player OWNER TO postgres;
+```
+
+---
+
+## 👀 **Endpoints REST disponibles**
 
 ### **🔹 Health Check**
 
-| Méthode | Endpoint               | Description |
-|---------|------------------------|-------------|
-| GET     | `/healthcheck`         | Vérifie si l'API est active |
-
----
+| Méthode | Endpoint       | Description                  |
+|---------|----------------|------------------------------|
+| GET     | `/healthcheck` | Vérifie si l'API est active  |
 
 ### **🔹 Gestion des joueurs (`Player`)**
 
-| Méthode | Endpoint               | Description |
-|---------|------------------------|-------------|
-| GET     | `/player`              | Récupère la liste des joueurs |
-| GET     | `/player/{lastName}`    | Récupère un joueur par son nom |
-| POST    | `/player`              | Ajoute un nouveau joueur |
-| PUT     | `/player`              | Met à jour un joueur existant |
-| DELETE  | `/player/{lastName}`    | Supprime un joueur par son nom |
-
----
-
-### **🔹 Gestion des matchs (`Match`)** *(à venir)*
-
-| Méthode | Endpoint               | Description |
-|---------|------------------------|-------------|
-| GET     | `/matches`             | Récupère tous les matchs |
-| GET     | `/matches/{id}`        | Récupère un match spécifique |
-| POST    | `/matches`             | Ajoute un nouveau match |
-| PUT     | `/matches/{id}`        | Met à jour un match existant |
-| DELETE  | `/matches/{id}`        | Supprime un match |
-
----
-
-### **🔹 Données de test (`TestData`)**
-
-| Méthode | Endpoint               | Description |
-|---------|------------------------|-------------|
-| GET     | `/testdata`            | Récupère toutes les entrées TestData (PostgreSQL) |
-
----
+| Méthode | Endpoint                | Description                              |
+|---------|-------------------------|------------------------------------------|
+| GET     | `/player`               | Récupère la liste des joueurs            |
+| GET     | `/player/{lastName}`    | Récupère un joueur par son nom           |
+| POST    | `/player`               | Ajoute un nouveau joueur                 |
+| PUT     | `/player`               | Met à jour un joueur existant            |
+| DELETE  | `/player/{lastName}`    | Supprime un joueur par son nom           |
 
 💡 **Tous les endpoints sont documentés dans Swagger UI** :  
-👉 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)  
+🔗 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
 
 ---
 
-## 📥 **Cloner le projet & Démarrer l'application**
+## 🏰 **Déploiement avec Docker**
 
-```bash
-git clone https://github.com/Escanor1986/Spring_Tennis.git
-cd tennis
-./mvnw spring-boot:run
-```
-
-➡ L'application démarre sur **<http://localhost:8080/>** 🎾
-
----
-
-## 🏗 **Packager et Lancer l'application via un JAR**
-
-### **1️⃣ Générer un JAR exécutable**
-
-```bash
-./mvnw package
-```
-
-➡ Le fichier JAR est généré dans `target/`.
-
-### **2️⃣ Lancer l'application avec Java**
-
-```bash
-java -jar target/tennis-0.0.1-SNAPSHOT.jar
-```
-
-➡ L'application démarre en mode standalone.
-
-### **3️⃣ Lancer avec un profil spécifique (`dev`, `prod`, etc.)**
-
-```bash
-java -jar target/tennis-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
-```
-
-➡ Charge la configuration `application-dev.properties`.
-
-### **4️⃣ Lancer l'application en arrière-plan (Linux/macOS)**
-
-```bash
-java -jar target/tennis-0.0.1-SNAPSHOT.jar &
-```
-
-➡ Exécute l'application sans bloquer le terminal.
-
-### **5️⃣ Arrêter l'application**
-
-```bash
-ps aux | grep tennis
-kill -9 <PID>
-```
-
----
-
-## 🛠 **Tests & Débogage**
-
-### ✅ **Lancer les tests**
-
-```bash
-./mvnw test
-```
-
-📌 Exécute **tous les tests unitaires et d’intégration**.
-
-### 🎯 **Lancer un test spécifique**
-
-```bash
-./mvnw -Dtest=HealthCheckServiceTest test
-```
-
-➡ Exécute uniquement les tests de `HealthCheckServiceTest.java`.
-
-### 🔍 **Accéder à la documentation API**
-
-Après le démarrage, accède à **Swagger UI** :
-👉 [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
-
----
-
-## 📦 **Déploiement avec Docker**
-
-Tu peux exécuter l'application dans un conteneur **Docker** avec PostgreSQL.
+Vous pouvez exécuter l'application dans un conteneur **Docker** avec PostgreSQL.
 
 ### **1️⃣ Créer un fichier `Dockerfile`**
 
@@ -238,23 +219,11 @@ services:
 docker-compose up --build
 ```
 
-➡ L'API sera accessible sur **<http://localhost:8080/>** 🚀
+🚀 L'API sera accessible sur **http://localhost:8080/**
 
 ---
 
-## 🤝 **Contribuer**
-
-Les contributions sont les bienvenues !
-
-1. Forke le projet 🍴  
-2. Crée une branche (`git checkout -b feature/amélioration`)  
-3. Commit tes modifications (`git commit -m "Ajout d'une nouvelle fonctionnalité"`)  
-4. Push ta branche (`git push origin feature/amélioration`)  
-5. Ouvre une **Pull Request** 🚀  
-
----
-
-## 📜 **Licence**
+## 💼 **Licence**
 
 Ce projet est sous licence **MIT**.  
 Voir le fichier [LICENSE](LICENSE) pour plus d’informations.
@@ -263,6 +232,4 @@ Voir le fichier [LICENSE](LICENSE) pour plus d’informations.
 
 ## 🎯 **Remerciements**
 
-Merci à tous ceux qui contribuent au projet ! 🙌  
-
----
+Merci à tous ceux qui contribuent au projet ! 🙌

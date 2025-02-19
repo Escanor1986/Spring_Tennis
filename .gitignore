@@ -31,3 +31,14 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# 🔥 Ignorer les fichiers de données PostgreSQL persistantes
+src/main/docker/postgres-data/
+
+# 🔥 Ignorer les fichiers de logs (si tu en génères dans Docker)
+src/main/docker/*.log
+
+
+# 🔥 Ignorer les fichiers temporaires Docker Compose
+src/main/docker/.env
+src/main/docker/docker-compose.override.yml
