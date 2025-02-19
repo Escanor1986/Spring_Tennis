@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerList;
+import com.escanor1986.tennis.PlayerToRegister;
 import com.escanor1986.tennis.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +44,7 @@ public class PlayerController {
 
   @GetMapping("/player")
   public List<Player> list() {
+    // Utilisation du service PlayerService pour obtenir la liste des joueurs
     return playerService.getAllPlayers();
   }
 
@@ -59,6 +60,7 @@ public class PlayerController {
   })
   @GetMapping("{lastName}")
   public Player getByLastName(@PathVariable("lastName") String lastName) {
+    // Utilisation du service PlayerService pour obtenir un joueur par son nom
       return playerService.getPlayerByLastName(lastName);
   }
   
@@ -79,12 +81,12 @@ public class PlayerController {
   @Operation(summary = "Update a player", description = "Update an existing player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Player updated", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Player.class)) })
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToRegister.class)) })
   })
 
   @PutMapping("/player")
-  public Player updatePlayer(@RequestBody @Valid Player player) {
-    return player;
+  public Player updatePlayer(@RequestBody @Valid PlayerToRegister playerToRegister) {
+    return playerService.createPlayer(playerToRegister);
   }
 
   // ! Supprimer un joueur
