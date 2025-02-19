@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerToRegister;
+import com.escanor1986.tennis.PlayerToSave;
 import com.escanor1986.tennis.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,20 +71,23 @@ public class PlayerController {
   })
 
   @PostMapping("/player")
-  public Player createPlayer(@RequestBody @Valid PlayerToRegister playerToRegister) {
-    return playerService.createPlayer(playerToRegister);
+  public Player createPlayer(@RequestBody @Valid PlayerToSave playerToSave) {
+    return playerService.createPlayer(playerToSave);
   }
 
   // ! Mettre à jour un joueur
   @Operation(summary = "Update a player", description = "Update an existing player")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Player updated", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToRegister.class)) })
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PlayerToSave.class)) }),
+      @ApiResponse(responseCode = "404", description = "A player with the specified last name was not found", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)) })
+
   })
 
   @PutMapping("/player")
-  public Player updatePlayer(@RequestBody @Valid Player player) {
-    return player;
+  public Player updatePlayer(@RequestBody @Valid PlayerToSave playerToSave) {
+    return playerService.updatePlayer(playerToSave);
   }
 
   // ! Supprimer un joueur

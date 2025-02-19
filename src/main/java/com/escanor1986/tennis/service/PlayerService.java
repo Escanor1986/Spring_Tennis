@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.escanor1986.tennis.Player;
 import com.escanor1986.tennis.PlayerList;
-import com.escanor1986.tennis.PlayerToRegister;
+import com.escanor1986.tennis.PlayerToSave;
 
 @Service
 public class PlayerService {
@@ -29,14 +29,31 @@ public class PlayerService {
   }
 
   // Cette méthode crée un nouveau joueur et retourne le joueur créé.
-  public Player createPlayer(PlayerToRegister playerToRegister) {
-    RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL, playerToRegister);
+  public Player createPlayer(PlayerToSave playerToSave) {
+    // liste des joueurs
+    return getPlayerNewRanking(PlayerList.ALL, playerToSave);
+  }
+
+  // Cette méthode met à jour un joueur et retourne le joueur mis à jour.
+  public Player updatePlayer(PlayerToSave playerToSave) {
+
+    getPlayerByLastName(playerToSave.lastName());
+
+    List<Player> playersWithoutPlayerToUpdate = PlayerList.ALL.stream()
+        .filter(player -> !player.lastName().equals(playerToSave.lastName()))
+        .toList();
+
+    return getPlayerNewRanking(playersWithoutPlayerToUpdate, playerToSave);
+  }
+
+  private Player getPlayerNewRanking(List<Player> existingPlayers, PlayerToSave playerToSave) {
+    RankingCalculator rankingCalculator = new RankingCalculator(existingPlayers, playerToSave);
     List<Player> players = rankingCalculator.getNewPlayersRanking();
 
     return players.stream()
-        .filter(player -> player.lastName().equals(playerToRegister.lastName()))
+        .filter(player -> player.lastName().equals(playerToSave.lastName()))
         .findFirst()
-        .orElseThrow(() -> new PlayerNotFoundException(playerToRegister.lastName()));
+        .orElseThrow(() -> new PlayerNotFoundException(playerToSave.lastName()));
   }
 
 }
