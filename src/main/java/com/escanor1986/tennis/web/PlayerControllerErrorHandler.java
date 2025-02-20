@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.escanor1986.tennis.service.PlayerAlreadyExistsException;
 import com.escanor1986.tennis.service.PlayerNotFoundException;
 
 @RestControllerAdvice
@@ -31,5 +32,11 @@ public class PlayerControllerErrorHandler {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(PlayerAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Error handlePlayerAlreadyExistsException(PlayerAlreadyExistsException ex) {
+        return new Error(ex.getMessage());
     }
 }

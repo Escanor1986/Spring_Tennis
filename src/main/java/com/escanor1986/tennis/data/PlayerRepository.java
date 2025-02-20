@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlayerRepository extends JpaRepository<PlayerEntity, Long> {
 
-  //query méthode pour retrouver un joueur par son nom de famille
+  // Query méthode de Spring Data pour retrouver un joueur par son nom de famille
+  // findOneByLastNameIgnoreCase : nom de la méthode, elle est générée automatiquement et permet de retrouver un joueur par son nom de famille
+  // Optional<PlayerEntity> : type de retour de la méthode
   Optional<PlayerEntity> findOneByLastNameIgnoreCase(String lastName);
 }

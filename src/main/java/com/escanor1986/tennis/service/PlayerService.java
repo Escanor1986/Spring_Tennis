@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerList;
 import com.escanor1986.tennis.PlayerToSave;
 import com.escanor1986.tennis.Rank;
 import com.escanor1986.tennis.data.PlayerEntity;
@@ -38,7 +36,7 @@ public class PlayerService {
   }
 
   // Cette méthode retourne un joueur par son nom de famille.
-  public Player getPlayerByLastName(String lastName) {
+  public Player getByLastName(String lastName) {
 
     Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
 
@@ -54,48 +52,60 @@ public class PlayerService {
   }
 
   // Cette méthode crée un nouveau joueur et retourne le joueur créé.
-  public Player createPlayer(PlayerToSave playerToSave) {
-    // liste des joueurs
-    return getPlayerNewRanking(PlayerList.ALL, playerToSave);
-  }
+  public Player create(PlayerToSave playerToSave) {
+    
+    // On vérifie que le joueur n'existe pas déjà
+    Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
 
-  // Cette méthode met à jour un joueur et retourne le joueur mis à jour.
-  public Player updatePlayer(PlayerToSave playerToSave) {
+    // Si le joueur existe déjà, une exception est levée
+    if (player.isPresent()) {
+        throw new PlayerAlreadyExistsException(playerToSave.lastName());
+    }
 
-    getPlayerByLastName(playerToSave.lastName());
+    // On crée un objet "entity" à partir de l'objet "player" reçu en paramètre
+    PlayerEntity playerToRegister = new PlayerEntity(
+            playerToSave.lastName(),
+            playerToSave.firstName(),
+            playerToSave.birthDate(),
+            playerToSave.points(),
+            999999999);
+
+    // On enregistre le joueur en base de données
+    PlayerEntity registeredPlayer = playerRepository.save(playerToRegister);
+
+    // On calcule le classement des joueurs
+    RankingCalculator rankingCalculator = new RankingCalculator(playerRepository.findAll());
+    List<PlayerEntity> newRanking = rankingCalculator.getNewPlayersRanking();
+    playerRepository.saveAll(newRanking);
+
+    // On retourne le joueur créé
+    return getByLastName(registeredPlayer.getLastName());
+}
+
+public Player updatePlayer(PlayerToSave playerToSave) {
+    return null;
+    /*getByLastName(playerToSave.lastName());
 
     List<Player> playersWithoutPlayerToUpdate = PlayerList.ALL.stream()
-        .filter(player -> !player.lastName().equals(playerToSave.lastName()))
-        .toList();
+            .filter(player -> !player.lastName().equals(playerToSave.lastName()))
+            .toList();
 
-    return getPlayerNewRanking(playersWithoutPlayerToUpdate, playerToSave);
-  }
-
-  // Cette méthode supprime un joueur par son nom de famille.
-  public void delete(String lastName) {
-    // En l'absence de joueur avec le nom de famille spécifié, une exception est
-    // levée.
-    Player playerToDelete = getPlayerByLastName(lastName);
-
-    // Supprimer le joueur de la liste en mémoire en filtrant par nom de famille
-    PlayerList.ALL = PlayerList.ALL.stream()
-        .filter(player -> !player.lastName().equals(lastName))
-        .toList();
-
-    // Recalculer le classement des joueurs
-    RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL);
-    rankingCalculator.getNewPlayersRanking();
-  }
-
-  // Cette méthode retourne un joueur avec le nouveau classement.
-  private Player getPlayerNewRanking(List<Player> existingPlayers, PlayerToSave playerToSave) {
-    RankingCalculator rankingCalculator = new RankingCalculator(existingPlayers, playerToSave);
+    RankingCalculator rankingCalculator = new RankingCalculator(playersWithoutPlayerToUpdate);
     List<Player> players = rankingCalculator.getNewPlayersRanking();
 
     return players.stream()
-        .filter(player -> player.lastName().equals(playerToSave.lastName()))
-        .findFirst()
-        .orElseThrow(() -> new PlayerNotFoundException(playerToSave.lastName()));
-  }
+            .filter(player -> player.lastName().equals(playerToSave.lastName()))
+            .findFirst().get();*/
+}
 
+public void delete(String lastName) {
+    /*Player playerToDelete = getByLastName(lastName);
+
+    PlayerList.ALL = PlayerList.ALL.stream()
+            .filter(player -> !player.lastName().equals(lastName))
+            .toList();
+
+    RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL);
+    rankingCalculator.getNewPlayersRanking();*/
+}
 }

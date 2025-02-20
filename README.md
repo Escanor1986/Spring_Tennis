@@ -56,7 +56,7 @@ docker compose -f src/main/docker/postgresql.yml up -d
 
 > **Note :**  
 > Les scripts d'initialisation situés dans `src/main/docker/init` (comme `init.sql`) s'exécutent **uniquement lors du premier démarrage** du container. Pour forcer leur réexécution (par exemple après correction d'un script), supprimez le dossier de données `postgres-data` :
-> 
+>
 > ```bash
 > rm -rf src/main/docker/postgres-data
 > docker compose -f src/main/docker/postgresql.yml up -d
@@ -69,6 +69,12 @@ docker compose -f src/main/docker/postgresql.yml down
 ```
 
 🛠 Stoppe le container **sans supprimer les données**.
+
+```bash
+docker compose -f src/main/docker/postgresql.yml down --remove-orphans
+```
+
+🛠 Stoppe le container **en supprimant le volume (les données)**.
 
 ### 🔄 **Redémarrer PostgreSQL plus tard**
 
@@ -219,7 +225,7 @@ services:
 docker-compose up --build
 ```
 
-🚀 L'API sera accessible sur **http://localhost:8080/**
+🚀 L'API sera accessible sur **<http://localhost:8080/>**
 
 ---
 
