@@ -2,6 +2,7 @@ package com.escanor1986.tennis.service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.escanor1986.tennis.Player;
 import com.escanor1986.tennis.PlayerList;
 import com.escanor1986.tennis.PlayerToSave;
 import com.escanor1986.tennis.Rank;
+import com.escanor1986.tennis.data.PlayerEntity;
 import com.escanor1986.tennis.data.PlayerRepository;
 
 @Service
@@ -19,9 +21,9 @@ public class PlayerService {
   // On vient brancher le repository pour pouvoir accéder à la base de données
   private final PlayerRepository playerRepository;
 
-    PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
+  PlayerService(PlayerRepository playerRepository) {
+    this.playerRepository = playerRepository;
+  }
 
   // Cette méthode retourne la liste de tous les joueurs triée par classement.
   public List<Player> getAllPlayers() {
@@ -37,10 +39,18 @@ public class PlayerService {
 
   // Cette méthode retourne un joueur par son nom de famille.
   public Player getPlayerByLastName(String lastName) {
-    return PlayerList.ALL.stream()
-        .filter(player -> player.lastName().equals(lastName))
-        .findFirst()
-        .orElseThrow(() -> new PlayerNotFoundException(lastName));
+
+    Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
+
+    // Si le joueur n'existe pas, une exception est levée
+    if (player.isEmpty()) {
+      throw new PlayerNotFoundException(lastName);
+    }
+
+    PlayerEntity playerEntity = player.get();
+
+    return new Player(playerEntity.getLastName(), playerEntity.getFirstName(),
+        playerEntity.getBirthDate(), new Rank(playerEntity.getRank(), playerEntity.getPoints()));
   }
 
   // Cette méthode crée un nouveau joueur et retourne le joueur créé.
