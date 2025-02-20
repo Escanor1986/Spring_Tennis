@@ -25,7 +25,7 @@ import com.escanor1986.tennis.data.PlayerRepository;
  * @return : crée un nouveau joueur et retourne le joueur créé
  * @return : met à jour un joueur et retourne le joueur mis à jour
  * @return : supprime un joueur
-  */
+ */
 @Service
 public class PlayerService {
 
@@ -66,22 +66,24 @@ public class PlayerService {
 
   // Cette méthode crée un nouveau joueur et retourne le joueur créé.
   public Player create(PlayerToSave playerToSave) {
-    
+
     // On vérifie que le joueur n'existe pas déjà
     Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
 
     // Si le joueur existe déjà, une exception est levée
     if (player.isPresent()) {
-        throw new PlayerAlreadyExistsException(playerToSave.lastName());
+      throw new PlayerAlreadyExistsException(playerToSave.lastName());
     }
+
+    Integer temporaryRank = 999999999;
 
     // On crée un objet "entity" à partir de l'objet "player" reçu en paramètre
     PlayerEntity playerToRegister = new PlayerEntity(
-            playerToSave.lastName(),
-            playerToSave.firstName(),
-            playerToSave.birthDate(),
-            playerToSave.points(),
-            999999999);
+        playerToSave.lastName(),
+        playerToSave.firstName(),
+        playerToSave.birthDate(),
+        playerToSave.points(),
+        temporaryRank);
 
     // On enregistre le joueur en base de données
     PlayerEntity registeredPlayer = playerRepository.save(playerToRegister);
@@ -95,32 +97,54 @@ public class PlayerService {
 
     // On retourne le joueur créé
     return getByLastName(registeredPlayer.getLastName());
-}
+  }
 
-public Player updatePlayer(PlayerToSave playerToSave) {
-    return null;
-    /*getByLastName(playerToSave.lastName());
+  public Player updatePlayer(PlayerToSave playerToSave) {
 
-    List<Player> playersWithoutPlayerToUpdate = PlayerList.ALL.stream()
-            .filter(player -> !player.lastName().equals(playerToSave.lastName()))
-            .toList();
+    // On vérifie que le joueur n'existe pas déjà
+    Optional<PlayerEntity> playerToUpdate = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
 
-    RankingCalculator rankingCalculator = new RankingCalculator(playersWithoutPlayerToUpdate);
-    List<Player> players = rankingCalculator.getNewPlayersRanking();
+    // Si le joueur n'existe pas, une exception est levée
+    if (playerToUpdate.isEmpty()) {
+      throw new PlayerAlreadyExistsException(playerToSave.lastName());
+    }
 
-    return players.stream()
-            .filter(player -> player.lastName().equals(playerToSave.lastName()))
-            .findFirst().get();*/
-}
+    // On met à jour le joueur en base de données
+    playerToUpdate.get().setFirstName(playerToSave.firstName());
+    playerToUpdate.get().setBirthDate(playerToSave.birthDate());
+    playerToUpdate.get().setPoints(playerToSave.points());
 
-public void delete(String lastName) {
-    /*Player playerToDelete = getByLastName(lastName);
+    // On enregistre le joueur en base de données
+    playerRepository.save(playerToUpdate.get());
 
-    PlayerList.ALL = PlayerList.ALL.stream()
-            .filter(player -> !player.lastName().equals(lastName))
-            .toList();
+    // On récupère la liste des joueurs actuels en base de données avec findAll
+    RankingCalculator rankingCalculator = new RankingCalculator(playerRepository.findAll());
 
-    RankingCalculator rankingCalculator = new RankingCalculator(PlayerList.ALL);
-    rankingCalculator.getNewPlayersRanking();*/
-}
+    // On calcule le nouveau classement des joueurs et on le sauvegarde en base de données
+    List<PlayerEntity> newRanking = rankingCalculator.getNewPlayersRanking();
+    playerRepository.saveAll(newRanking);
+
+    // On retourne le joueur créé
+    return getByLastName(playerToSave.lastName());
+
+  }
+
+  public void delete(String lastName) {
+    // supprimer un joueur
+    Optional<PlayerEntity> playerToDelete = playerRepository.findOneByLastNameIgnoreCase(lastName);
+
+    // Si le joueur n'existe pas, une exception est levée
+    if (playerToDelete.isEmpty()) {
+      throw new PlayerNotFoundException(lastName);
+    }
+
+    playerRepository.delete(playerToDelete.get());
+
+    // On récupère la liste des joueurs actuels en base de données avec findAll
+    RankingCalculator rankingCalculator = new RankingCalculator(playerRepository.findAll());
+
+    // On calcule le nouveau classement des joueurs et on le sauvegarde en base de données
+    List<PlayerEntity> newRanking = rankingCalculator.getNewPlayersRanking();
+    playerRepository.saveAll(newRanking);
+  }
 }
