@@ -13,6 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.escanor1986.tennis.service.PlayerAlreadyExistsException;
 import com.escanor1986.tennis.service.PlayerNotFoundException;
 
+/**
+ * Classe pour gérer les erreurs du contrôleur des joueurs
+ * 
+ * @param ex : exception à gérer
+ * 
+ * @return : retourne une erreur
+ * @return : retourne une erreur de validation
+ * @return : retourne une erreur si le joueur existe déjà
+ */
 @RestControllerAdvice
 public class PlayerControllerErrorHandler {
 

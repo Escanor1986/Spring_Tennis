@@ -13,6 +13,19 @@ import com.escanor1986.tennis.Rank;
 import com.escanor1986.tennis.data.PlayerEntity;
 import com.escanor1986.tennis.data.PlayerRepository;
 
+/**
+ * Classe pour gérer les joueurs
+ * 
+ * @Service : annotation pour dire que cette classe est un service
+ * 
+ * @param playerRepository : repository pour accéder à la base de données
+ * 
+ * @return : retourne la liste de tous les joueurs triée par classement
+ * @return : retourne un joueur par son nom de famille
+ * @return : crée un nouveau joueur et retourne le joueur créé
+ * @return : met à jour un joueur et retourne le joueur mis à jour
+ * @return : supprime un joueur
+  */
 @Service
 public class PlayerService {
 
@@ -73,8 +86,10 @@ public class PlayerService {
     // On enregistre le joueur en base de données
     PlayerEntity registeredPlayer = playerRepository.save(playerToRegister);
 
-    // On calcule le classement des joueurs
+    // On récupère la liste des joueurs actuels en base de données avec findAll
     RankingCalculator rankingCalculator = new RankingCalculator(playerRepository.findAll());
+
+    // On calcule le nouveau classement des joueurs et on le sauvegarde en base de données
     List<PlayerEntity> newRanking = rankingCalculator.getNewPlayersRanking();
     playerRepository.saveAll(newRanking);
 

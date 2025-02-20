@@ -5,9 +5,17 @@ import java.util.List;
 
 import com.escanor1986.tennis.data.PlayerEntity;
 
+/**
+ * Classe pour calculer le classement des joueurs
+ * 
+ * @param currentPlayersRanking : liste des joueurs actuels en base de données
+ * 
+ * @return : retourne la liste des joueurs avec leur nouveau classement
+  */
 public class RankingCalculator {
 
     // Liste des joueurs actuels en base de données
+    // Récupérée indicrectement via le repository et le service avec la méthode findAll()
     private final List<PlayerEntity> currentPlayersRanking;
 
     // Constructeur de la classe
@@ -17,7 +25,7 @@ public class RankingCalculator {
 
     // Méthode pour calculer le nouveau classement des joueurs
     public List<PlayerEntity> getNewPlayersRanking() {
-      
+
         // Tri des joueurs par points
         currentPlayersRanking.sort((player1, player2) -> Integer.compare(player2.getPoints(), player1.getPoints()));
 

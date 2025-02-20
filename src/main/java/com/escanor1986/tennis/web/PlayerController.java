@@ -24,6 +24,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+/**
+ * Classe pour gérer les joueurs
+ * 
+ * @Tag : annotation pour dire que cette classe est un contrôleur
+ * @RestController : annotation pour dire que cette classe est un contrôleur
+ * 
+ * @param playerService : service pour gérer les joueurs
+ * 
+ * @Operation : annotation pour décrire une opération
+ * @ApiResponses : annotation pour décrire les réponses possibles
+ * @ApiResponse : annotation pour décrire une réponse
+ * @Content : annotation pour décrire le contenu de la réponse
+ * @Schema : annotation pour décrire le schéma d'un objet
+ * @ArraySchema : annotation pour décrire le schéma d'un tableau
+ * @PathVariable : annotation pour dire que l'attribut est un paramètre de l'URL
+ * 
+ * @return : retourne la liste de tous les joueurs
+ * @return : retourne un joueur par son nom de famille
+ * @return : crée un nouveau joueur et retourne le joueur créé
+ * @return : met à jour un joueur et retourne le joueur mis à jour
+ * @return : supprime un joueur
+ * 
+  */
 @Tag(name = "Player", description = "The player API")
 @RestController
 public class PlayerController {
