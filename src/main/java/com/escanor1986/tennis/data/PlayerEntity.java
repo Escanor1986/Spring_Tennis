@@ -1,4 +1,4 @@
-package com.escanor1986.tennis.models;
+package com.escanor1986.tennis.data;
 
 import jakarta.persistence.*;
 

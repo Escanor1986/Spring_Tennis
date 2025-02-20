@@ -3,7 +3,7 @@ package com.escanor1986.tennis.service;
 import org.springframework.stereotype.Service;
 import com.escanor1986.tennis.ApplicationStatus;
 import com.escanor1986.tennis.HealthCheck;
-import com.escanor1986.tennis.repository.HealthCheckRepository;
+import com.escanor1986.tennis.data.HealthCheckRepository;
 
 @Service
 public class HealthCheckService {

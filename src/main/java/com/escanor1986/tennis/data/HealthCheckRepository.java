@@ -1,4 +1,4 @@
-package com.escanor1986.tennis.repository;
+package com.escanor1986.tennis.data;
 
 import org.springframework.stereotype.Repository;
 

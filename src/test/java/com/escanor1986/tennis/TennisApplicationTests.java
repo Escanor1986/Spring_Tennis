@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.escanor1986.tennis.repository.HealthCheckRepository;
+import com.escanor1986.tennis.data.HealthCheckRepository;
 import com.escanor1986.tennis.service.HealthCheckService;
 import com.escanor1986.tennis.web.HealthCheckController;
 
