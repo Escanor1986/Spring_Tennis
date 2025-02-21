@@ -39,6 +39,9 @@ public class PlayerEntity {
     public PlayerEntity() {
     }
 
+    // Utiliser pour créer un joueur en base de données
+    // Pas be soin d'id grâce à la génération automatique 
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     public PlayerEntity(String lastName, String firstName, LocalDate birthDate, Integer points, Integer rank) {
         this.lastName = lastName;
         this.firstName = firstName;
