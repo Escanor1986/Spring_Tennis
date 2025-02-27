@@ -55,7 +55,7 @@ public class PlayerServiceIntegrationTest {
         );
 
         // When
-        playerService.updatePlayer(playerToSave);
+        playerService.update(playerToSave);
         Player updatedPlayer = playerService.getByLastName("NadalTest");
 
         // Then

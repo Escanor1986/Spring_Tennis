@@ -7,7 +7,6 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class PlayerList {
 
     public static Player RAFAEL_NADAL = new Player(

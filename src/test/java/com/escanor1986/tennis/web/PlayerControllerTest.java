@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,9 +22,6 @@ public class PlayerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    /**
-     * Mocking the service layer
-     */
     @MockBean
     private PlayerService playerService;
 

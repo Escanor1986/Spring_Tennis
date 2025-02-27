@@ -4,14 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-// Représentation Java de la table "player" en base de données postgresql
-// name = "player" : nom de la table en base de données
-// schema = "public" : schéma de la table en base de données
-// @Entity : annotation pour dire que cette classe est une entité
-// @Table : annotation pour dire que cette classe est une table
-// @Id : annotation pour dire que l'attribut est une clé primaire
-// @GeneratedValue : annotation pour dire que la valeur de l'attribut est générée automatiquement
-// @Column : annotation pour dire que l'attribut est une colonne
 @Entity
 @Table(name = "player", schema = "public")
 public class PlayerEntity {
@@ -39,9 +31,6 @@ public class PlayerEntity {
     public PlayerEntity() {
     }
 
-    // Utiliser pour créer un joueur en base de données
-    // Pas be soin d'id grâce à la génération automatique 
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     public PlayerEntity(String lastName, String firstName, LocalDate birthDate, Integer points, Integer rank) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -63,10 +52,6 @@ public class PlayerEntity {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getFirstName() {
