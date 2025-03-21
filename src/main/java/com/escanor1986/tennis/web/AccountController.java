@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,12 +23,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/accounts")
 public class AccountController {
 
-    @Autowired
-    private AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     private final SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+
+    AccountController(AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+    }
 
     @Operation(summary = "Authenticates user", description = "Authenticates user")
     @ApiResponses(value = {
@@ -38,6 +40,8 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Login or password is not provided.")
     })
     @PostMapping("/login")
+    // @RequestBody : Indique que les données de la requête HTTP doivent être désérialisées en objet UserCredentials
+    // @Valid : Indique à Spring de valider les données de la requête en utilisant les annotations de validation de l'objet UserCredentials
     public void login(@RequestBody @Valid UserCredentials credentials, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(credentials.login(), credentials.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

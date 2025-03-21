@@ -56,3 +56,26 @@ public class EscanorUserDetailsService implements UserDetailsService {
 *? UserRepository : C’est le composant qui interroge la base de données pour trouver l’utilisateur et ses rôles.
 *? SimpleGrantedAuthority : Ces objets représentent les autorisations accordées à l’utilisateur. Ils seront utilisés pour contrôler l'accès aux ressources (ex. : vérification de rôle dans des annotations ou des expressions de sécurité).
   */
+
+  /* 
+ * Remarque:
+ * UserDetailsService dans Spring Security exige obligatoirement la gestion des rôles (ou "authorities") pour plusieurs raisons:
+
+1. La sécurité dans Spring est basée sur l'authentification (qui est l'utilisateur) ET l'autorisation (ce qu'il peut faire)
+
+2. La méthode `loadUserByUsername()` doit retourner un `UserDetails` qui contient nécessairement:
+   - Identifiants de connexion
+   - Mot de passe
+   - Collection d'`GrantedAuthority` représentant les rôles/permissions
+
+3. Ces autorités sont utilisées pour les annotations comme `@PreAuthorize("hasRole('ADMIN')")` et les configurations de sécurité comme `.hasAuthority("WRITE_PRIVILEGE")`
+
+Même si votre application n'utilise pas de rôles complexes, vous devez au minimum fournir une liste d'autorités (qui peut être vide ou contenir un rôle par défaut comme "USER").
+
+Dans l'implémentation:
+```java
+return new User(username, password, 
+    Ici, vous DEVEZ spécifier une collection d'autorités
+    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+```
+ */
