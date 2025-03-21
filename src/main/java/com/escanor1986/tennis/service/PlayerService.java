@@ -49,9 +49,15 @@ public class PlayerService {
                 .collect(Collectors.toList());
     }
 
+    /** 
+     * @param lastName : nom de famille du joueur
+     * 
+     * @return : retourne un joueur par son nom de famille
+     * @throws PlayerNotFoundException : exception si le joueur n'existe pas
+     */
     public Player getByLastName(String lastName) {
         Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
-        if (player.isEmpty()) {
+        if (player.isEmpty()) { 
             throw new PlayerNotFoundException(lastName);
         }
         return new Player(
