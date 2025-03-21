@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  dyma-postgresql:
+    image: postgres:15
+    container_name: dyma-postgres-production
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=5ML^Es#x%4U&DK6c
+    ports:
+      - '5424:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+# docker compose -f src/main/docker/prod/postgresql.yml up
+# docker compose -f src/main/docker/prod/postgresql.yml down
+
+# docker exec -it dyma-postgres-production bash
+# psql -U postgres
+
+# ./mvnw clean spring-boot:run \
+# -Dspring-boot.run.profiles=prod \
+# -Dspring-boot.run.arguments="--spring.datasource.url=jdbc:postgresql://localhost:5424/postgres --spring.datasource.username=postgres --spring.datasource.password=5ML^Es#x%4U&DK6c"
