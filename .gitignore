@@ -42,3 +42,5 @@ src/main/docker/*.log
 # 🔥 Ignorer les fichiers temporaires Docker Compose
 src/main/docker/.env
 src/main/docker/docker-compose.override.yml
+src/main/docker/prod/** 
+
