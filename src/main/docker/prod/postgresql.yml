@@ -2,7 +2,7 @@ version: '3.8'
 services:
   dyma-postgresql:
     image: postgres:15
-    container_name: dyma-postgres-production
+    container_name: escanor-postgres-production
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=5ML^Es#x%4U&DK6c
