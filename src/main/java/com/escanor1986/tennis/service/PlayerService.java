@@ -45,6 +45,7 @@ public class PlayerService {
     }
 
     public List<Player> getAllPlayers() {
+        log.info("Récupération de la liste des joueurs");
         try {
             return playerRepository.findAll().stream()
                     .map(player -> new Player(
@@ -55,6 +56,7 @@ public class PlayerService {
                     .sorted(Comparator.comparing(player -> player.rank().position()))
                     .collect(Collectors.toList());
         } catch (DataAccessException e) {
+            log.error("Erreur lors de la récupération de la liste des joueurs", e);
             throw new PlayerDataRetrievalException(e);
         } finally {
             log.info("Liste des joueurs récupérée {}", playerRepository.findAll());
@@ -68,9 +70,11 @@ public class PlayerService {
      * @throws PlayerNotFoundException : exception si le joueur n'existe pas
      */
     public Player getByLastName(String lastName) {
+        log.info("Récupération du joueur : {}", lastName);
         try {
             Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(lastName);
             if (player.isEmpty()) {
+                log.warn("Joueur non trouvé : {}", lastName);
                 throw new PlayerNotFoundException(lastName);
             }
             return new Player(
@@ -79,6 +83,7 @@ public class PlayerService {
                     player.get().getBirthDate(),
                     new Rank(player.get().getRank(), player.get().getPoints()));
         } catch (DataAccessException e) {
+            log.error("Erreur lors de la récupération du joueur", e);
             throw new PlayerDataRetrievalException(e);
         } finally {
             log.info("Joueur récupéré : {}", lastName);
@@ -86,9 +91,11 @@ public class PlayerService {
     }
 
     public Player create(PlayerToSave playerToSave) {
+        log.info("Création du joueur : {}", playerToSave.lastName());
         try {
             Optional<PlayerEntity> player = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
             if (player.isPresent()) {
+                log.warn("Joueur à créer déjà existant : {}", playerToSave.lastName());
                 throw new PlayerAlreadyExistsException(playerToSave.lastName());
             }
 
@@ -107,6 +114,7 @@ public class PlayerService {
 
             return getByLastName(registeredPlayer.getLastName());
         } catch (DataAccessException e) {
+            log.error("Erreur lors de la création du joueur", e);
             throw new PlayerDataRetrievalException(e);
         } finally {
             log.info("Joueur créé : {}", playerToSave.lastName());
@@ -114,9 +122,11 @@ public class PlayerService {
     }
 
     public Player update(PlayerToSave playerToSave) {
+        log.info("Mise à jour du joueur : {}", playerToSave.lastName());
         try {
         Optional<PlayerEntity> playerToUpdate = playerRepository.findOneByLastNameIgnoreCase(playerToSave.lastName());
         if (playerToUpdate.isEmpty()) {
+            log.warn("Joueur à modifier non trouvé : {}", playerToSave.lastName());
             throw new PlayerNotFoundException(playerToSave.lastName());
         }
 
@@ -131,6 +141,7 @@ public class PlayerService {
 
         return getByLastName(updatedPlayer.getLastName());
         } catch (DataAccessException e) {
+        log.error("Erreur lors de la mise à jour du joueur", e);
         throw new PlayerDataRetrievalException(e);
         } finally {
         log.info("Joueur mis à jour : {}", playerToSave.lastName());
@@ -138,9 +149,11 @@ public class PlayerService {
     }
 
     public void delete(String lastName) {
+        log.info("Suppression du joueur : {}", lastName);
         try {
             Optional<PlayerEntity> playerDelete = playerRepository.findOneByLastNameIgnoreCase(lastName);
             if (playerDelete.isEmpty()) {
+                log.warn("Joueur à supprimer non trouvé : {}", lastName);
                 throw new PlayerNotFoundException(lastName);
             }
 
@@ -150,6 +163,7 @@ public class PlayerService {
             List<PlayerEntity> newRanking = rankingCalculator.getNewPlayersRanking();
             playerRepository.saveAll(newRanking);
         } catch (DataAccessException e) {
+            log.error("Erreur lors de la suppression du joueur", e);
             throw new PlayerDataRetrievalException(e);
         } finally {
             log.info("Joueur supprimé : {}", lastName);
