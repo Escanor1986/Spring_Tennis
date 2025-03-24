@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,13 +48,31 @@ public class PlayerServiceTest {
     public void shouldRetrievePlayer() {
         // Given
         String playerToRetrieve = "nadal";
-        Mockito.when(playerRepository.findOneByLastNameIgnoreCase(playerToRetrieve)).thenReturn(Optional.of(PlayerEntityList.RAFAEL_NADAL));
+        Mockito.when(playerRepository.findOneByLastNameIgnoreCase(playerToRetrieve))
+                .thenReturn(Optional.of(PlayerEntityList.RAFAEL_NADAL));
 
         // When
         Player retrievedPlayer = playerService.getByLastName(playerToRetrieve);
 
         // Then
         Assertions.assertThat(retrievedPlayer.lastName()).isEqualTo("Nadal");
+    }
+
+    /** 
+     * Teste si une exception est levée lorsqu'une erreur d'accès aux données se produit
+     * !On contrôle le comportement du repository en l'utilisant sous forme de mock en vérifiant que la méthode findAll() lève une exception de type DataAccessException
+     * !On vérifie que l'exception levée est bien de type PlayerDataRetrievalException
+     */
+    @Test
+    public void shouldFailToReturnPlayersRanking_WhenDataAccessExceptionOccurs() {
+        // Given
+        Mockito.when(playerRepository.findAll()).thenThrow(new DataRetrievalFailureException("Data access error"));
+
+        // When / Then
+        Exception exception = assertThrows(PlayerDataRetrievalException.class, () -> {
+            playerService.getAllPlayers();
+        });
+        Assertions.assertThat(exception.getMessage()).isEqualTo("Could not retrieve player data");
     }
 
     @Test

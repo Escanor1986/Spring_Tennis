@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.escanor1986.tennis.service.PlayerAlreadyExistsException;
+import com.escanor1986.tennis.service.PlayerDataRetrievalException;
 import com.escanor1986.tennis.service.PlayerNotFoundException;
 
 /**
@@ -46,6 +47,19 @@ public class PlayerControllerErrorHandler {
     @ExceptionHandler(PlayerAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error handlePlayerAlreadyExistsException(PlayerAlreadyExistsException ex) {
+        return new Error(ex.getMessage());
+    }
+
+    /**
+     * Gère les exceptions de récupération des données des joueurs
+     * Utilise l'annotation @ExceptionHandler pour gérer les exceptions de type PlayerDataRetrievalException
+     * Utilise l'annotation @ResponseStatus pour renvoyer un code d'erreur 500
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(PlayerDataRetrievalException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Error handlePlayerDataRetrievalException(PlayerDataRetrievalException ex) {
         return new Error(ex.getMessage());
     }
 }
