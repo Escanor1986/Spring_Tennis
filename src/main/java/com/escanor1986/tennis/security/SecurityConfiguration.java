@@ -102,6 +102,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, playersUrl).hasAuthority(roleAdmin)
                 .requestMatchers(HttpMethod.PUT, playersUrl).hasAuthority(roleAdmin)
                 .requestMatchers(HttpMethod.DELETE, playersUrl).hasAuthority(roleAdmin)
+                .requestMatchers("/actuator/**").hasAuthority(roleAdmin)
                 
                 // URLs publiques ne nécessitant pas d'authentification
                 .requestMatchers("/swagger-ui/**").permitAll()
