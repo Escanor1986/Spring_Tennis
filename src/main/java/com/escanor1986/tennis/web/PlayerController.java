@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerToSave;
+import com.escanor1986.tennis.model.Player;
+import com.escanor1986.tennis.model.PlayerToSave;
 import com.escanor1986.tennis.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,11 +1,11 @@
 package com.escanor1986.tennis.data;
-import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.Rank;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+
+import com.escanor1986.tennis.model.Player;
+import com.escanor1986.tennis.model.Rank;
 
 public class PlayerList {
 

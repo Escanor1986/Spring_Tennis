@@ -91,6 +91,8 @@ public class SecurityConfiguration {
                     .policyDirectives("default-src 'self'; style-src 'self' 'unsafe-inline';"))
                 // X-Frame-Options : Empêche le site d'être affiché dans un iframe (protection contre le clickjacking)
                 .frameOptions(frameOptions -> frameOptions.deny())
+                // Permissions Policy : Désactive l'accès à certaines fonctionnalités du navigateur
+                .permissionsPolicyHeader(permissionPolicy -> permissionPolicy.policy("geolocation=(), microphone=(), camera=(), fullscreen=(self)"))
                 // Cache-Control : Désactive la mise en cache pour les ressources sensibles
                 .cacheControl(cacheControl -> cacheControl.disable())
             )

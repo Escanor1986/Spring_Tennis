@@ -1,4 +1,4 @@
-package com.escanor1986.tennis;
+package com.escanor1986.tennis.model;
 
 import jakarta.validation.constraints.NotBlank;
 

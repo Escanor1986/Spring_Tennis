@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerToSave;
-import com.escanor1986.tennis.Rank;
 import com.escanor1986.tennis.data.PlayerEntity;
 import com.escanor1986.tennis.data.PlayerRepository;
+import com.escanor1986.tennis.model.Player;
+import com.escanor1986.tennis.model.PlayerToSave;
+import com.escanor1986.tennis.model.Rank;
 
 /**
  * Classe pour gérer les joueurs

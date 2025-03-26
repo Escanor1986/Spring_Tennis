@@ -1,6 +1,4 @@
 package com.escanor1986.tennis.web;
-import com.escanor1986.tennis.UserCredentials;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,6 +15,8 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
+
+import com.escanor1986.tennis.model.UserCredentials;
 
 @Tag(name = "Accounts API")
 @RestController

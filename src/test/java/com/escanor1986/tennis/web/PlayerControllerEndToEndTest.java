@@ -1,7 +1,4 @@
 package com.escanor1986.tennis.web;
-import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerToSave;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
@@ -16,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.escanor1986.tennis.model.Player;
+import com.escanor1986.tennis.model.PlayerToSave;
 
 import java.time.LocalDate;
 import java.time.Month;

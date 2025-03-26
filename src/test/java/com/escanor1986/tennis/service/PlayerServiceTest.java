@@ -1,8 +1,8 @@
 package com.escanor1986.tennis.service;
 
-import com.escanor1986.tennis.Player;
 import com.escanor1986.tennis.data.PlayerEntityList;
 import com.escanor1986.tennis.data.PlayerRepository;
+import com.escanor1986.tennis.model.Player;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

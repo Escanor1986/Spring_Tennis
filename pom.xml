@@ -12,7 +12,7 @@
 	<artifactId>tennis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tennis</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Tennis Game powered by Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 
@@ -44,6 +44,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>6.2.5</version>
+</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
 <dependency>
     <groupId>org.springframework.boot</groupId>

@@ -1,13 +1,13 @@
 package com.escanor1986.tennis.service;
-import com.escanor1986.tennis.Player;
-import com.escanor1986.tennis.PlayerToSave;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+
+import com.escanor1986.tennis.model.Player;
+import com.escanor1986.tennis.model.PlayerToSave;
 
 import java.time.LocalDate;
 import java.time.Month;
