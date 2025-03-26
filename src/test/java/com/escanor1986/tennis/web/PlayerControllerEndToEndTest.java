@@ -1,6 +1,8 @@
 package com.escanor1986.tennis.web;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +25,6 @@ import java.util.List;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PlayerControllerEndToEndTest {
 
     @LocalServerPort
@@ -31,6 +32,12 @@ public class PlayerControllerEndToEndTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @BeforeEach
+    void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     public void shouldCreatePlayer() {

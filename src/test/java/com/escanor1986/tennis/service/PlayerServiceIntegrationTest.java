@@ -1,6 +1,8 @@
 package com.escanor1986.tennis.service;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,12 @@ public class PlayerServiceIntegrationTest {
 
     @Autowired
     private PlayerService playerService;
+
+    @BeforeEach
+    void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     public void shouldCreatePlayer() {

@@ -58,8 +58,6 @@ public class PlayerService {
         } catch (DataAccessException e) {
             log.error("Erreur lors de la récupération de la liste des joueurs", e);
             throw new PlayerDataRetrievalException(e);
-        } finally {
-            log.info("Liste des joueurs récupérée {}", playerRepository.findAll());
         }
     }
 
